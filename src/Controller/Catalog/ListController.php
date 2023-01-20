@@ -2,6 +2,7 @@
 
 namespace App\Controller\Catalog;
 
+use App\ResponseBuilder\CartBuilder;
 use App\ResponseBuilder\ProductListBuilder;
 use App\Service\Catalog\ProductProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,9 +18,18 @@ class ListController extends AbstractController
 {
     private const MAX_PER_PAGE = 3;
 
-    public function __construct(private ProductProvider $productProvider, private ProductListBuilder $productListBuilder) { }
+    /**
+     * @param ProductProvider $productProvider
+     * @param ProductListBuilder $productListBuilder
+     */
+    public function __construct(private readonly ProductProvider $productProvider, private readonly ProductListBuilder $productListBuilder) { }
 
-    public function __invoke(Request $request): Response
+    /**
+     * @param Request $request
+     * @param CartBuilder $cartBuilder
+     * @return Response
+     */
+    public function __invoke(Request $request, CartBuilder $cartBuilder): Response
     {
         $page = max(0, (int)$request->get('page', 0));
 

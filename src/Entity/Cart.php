@@ -2,16 +2,16 @@
 
 namespace App\Entity;
 
-use App\Service\Catalog\Product;
+use App\Service\Cart\CartInterface;
+use App\Service\Catalog\ProductInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Entity]
-class Cart implements \App\Service\Cart\Cart
+class Cart implements CartInterface
 {
     public const CAPACITY = 3;
 
@@ -19,14 +19,14 @@ class Cart implements \App\Service\Cart\Cart
     #[ORM\Column(type: 'uuid', nullable: false)]
     private UuidInterface $id;
 
-    #[ORM\ManyToMany(targetEntity: 'Product')]
-    #[ORM\JoinTable(name: 'cart_products')]
-    private Collection $products;
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: 'App\Entity\CartProduct', cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'cart_product')]
+    private Collection $cartProducts;
 
     public function __construct(string $id)
     {
         $this->id = Uuid::fromString($id);
-        $this->products = new ArrayCollection();
+        $this->cartProducts = new ArrayCollection();
     }
 
     public function getId(): string
@@ -37,36 +37,32 @@ class Cart implements \App\Service\Cart\Cart
     public function getTotalPrice(): int
     {
         return array_reduce(
-            $this->products->toArray(),
-            static fn(int $total, Product $product): int => $total + $product->getPrice(),
+            $this->cartProducts->toArray(),
+            static fn(int $total, CartProduct $product): int => $total + $product->getProduct()->getPrice(),
             0
         );
     }
 
-    #[Pure]
     public function isFull(): bool
     {
-        return $this->products->count() >= self::CAPACITY;
+        return $this->cartProducts->count() >= self::CAPACITY;
     }
 
     public function getProducts(): iterable
     {
-        return $this->products->getIterator();
+        return $this->cartProducts->map(
+            static fn(CartProduct $cartProduct): ProductInterface => $cartProduct->getProduct()
+        );
     }
 
-    #[Pure]
-    public function hasProduct(\App\Entity\Product $product): bool
+    public function hasProduct(CartProduct $product): bool
     {
-        return $this->products->contains($product);
+        return $this->cartProducts->contains($product);
     }
 
-    public function addProduct(\App\Entity\Product $product): void
+    public function addProduct(Product $product): void
     {
-        $this->products->add($product);
+        $this->cartProducts->add(new CartProduct($this, $product));
     }
 
-    public function removeProduct(\App\Entity\Product $product): void
-    {
-        $this->products->removeElement($product);
-    }
 }
