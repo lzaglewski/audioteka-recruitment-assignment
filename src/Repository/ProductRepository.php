@@ -2,7 +2,8 @@
 
 namespace App\Repository;
 
-use App\Service\Catalog\Product;
+use App\Entity\Product;
+use App\Service\Catalog\ProductInterface;
 use App\Service\Catalog\ProductProvider;
 use App\Service\Catalog\ProductService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,9 +14,9 @@ class ProductRepository implements ProductProvider, ProductService
 {
     private EntityRepository $repository;
 
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->repository = $this->entityManager->getRepository(\App\Entity\Product::class);
+        $this->repository = $this->entityManager->getRepository(Product::class);
     }
 
     public function getProducts(int $page = 0, int $count = 3): iterable
@@ -24,8 +25,7 @@ class ProductRepository implements ProductProvider, ProductService
             ->setMaxResults($count)
             ->setFirstResult($page * $count)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function getTotalCount(): int
@@ -38,9 +38,9 @@ class ProductRepository implements ProductProvider, ProductService
         return $this->repository->find($productId) !== null;
     }
 
-    public function add(string $name, int $price): Product
+    public function add(string $name, int $price): ProductInterface
     {
-        $product = new \App\Entity\Product(Uuid::uuid4(), $name, $price);
+        $product = new Product(Uuid::uuid4(), $name, $price);
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();
