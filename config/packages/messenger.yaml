@@ -14,4 +14,5 @@ framework:
             'App\Messenger\Cart\CreateCart': async
             'App\Messenger\Cart\RemoveProductFromCart': async
             'App\Messenger\Catalog\AddProductToCatalog': async
+            'App\Messenger\Catalog\UpdateProduct': async
             'App\Messenger\Catalog\RemoveProductFromCatalog': async
