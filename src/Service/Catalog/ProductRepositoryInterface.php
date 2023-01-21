@@ -2,10 +2,16 @@
 
 namespace App\Service\Catalog;
 
-interface ProductProvider
+use App\Entity\Product;
+
+interface ProductRepositoryInterface
 {
+    public function add(string $name, int $price): Product;
+
+    public function remove(string $id): void;
+
     /**
-     * @return ProductInterface[]
+     * @return Product[]
      */
     public function getProducts(int $page = 0, int $count = 3): iterable;
 

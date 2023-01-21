@@ -4,7 +4,7 @@ namespace App\Controller\Catalog;
 
 use App\ResponseBuilder\CartBuilder;
 use App\ResponseBuilder\ProductListBuilder;
-use App\Service\Catalog\ProductProvider;
+use App\Service\Catalog\ProductRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,11 +18,12 @@ class ListController extends AbstractController
 {
     private const MAX_PER_PAGE = 3;
 
-    /**
-     * @param ProductProvider $productProvider
-     * @param ProductListBuilder $productListBuilder
-     */
-    public function __construct(private readonly ProductProvider $productProvider, private readonly ProductListBuilder $productListBuilder) { }
+    public function __construct(
+        private readonly ProductRepositoryInterface $productProvider,
+        private readonly ProductListBuilder         $productListBuilder
+    )
+    {
+    }
 
     /**
      * @param Request $request

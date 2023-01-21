@@ -2,11 +2,11 @@
 
 namespace App\ResponseBuilder;
 
-use App\Service\Cart\CartInterface;
+use App\Entity\Cart;
 
 class CartBuilder
 {
-    public function __invoke(CartInterface $cart): array
+    public function __invoke(Cart $cart): array
     {
         $data = [
             'total_price' => $cart->getTotalPrice(),

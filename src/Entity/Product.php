@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use App\Service\Catalog\ProductInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Entity]
-class Product implements ProductInterface
+class Product
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', nullable: false)]

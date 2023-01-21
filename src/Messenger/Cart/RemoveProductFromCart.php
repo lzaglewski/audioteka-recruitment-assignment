@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Messenger;
+namespace App\Messenger\Cart;
 
 class RemoveProductFromCart
 {

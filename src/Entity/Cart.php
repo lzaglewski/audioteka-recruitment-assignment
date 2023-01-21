@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\Service\Cart\CartInterface;
-use App\Service\Catalog\ProductInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 #[ORM\Entity]
-class Cart implements CartInterface
+class Cart
 {
     public const CAPACITY = 3;
 
@@ -51,7 +49,7 @@ class Cart implements CartInterface
     public function getProducts(): iterable
     {
         return $this->cartProducts->map(
-            static fn(CartProduct $cartProduct): ProductInterface => $cartProduct->getProduct()
+            static fn(CartProduct $cartProduct): Product => $cartProduct->getProduct()
         );
     }
 

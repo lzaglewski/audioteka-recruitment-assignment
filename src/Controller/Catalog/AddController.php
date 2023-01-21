@@ -2,24 +2,26 @@
 
 namespace App\Controller\Catalog;
 
-use App\Messenger\AddProductToCatalog;
-use App\Messenger\MessageBusAwareInterface;
-use App\Messenger\MessageBusTrait;
+use App\Messenger\Catalog\AddProductToCatalog;
 use App\ResponseBuilder\ErrorBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/products", methods={"POST"}, name="product-add")
  */
-class AddController extends AbstractController implements MessageBusAwareInterface
+class AddController extends AbstractController
 {
-    use MessageBusTrait;
-
-    public function __construct(private readonly ErrorBuilder $errorBuilder) { }
+    public function __construct(
+        private readonly ErrorBuilder        $errorBuilder,
+        private readonly MessageBusInterface $messageBus
+    )
+    {
+    }
 
     public function __invoke(Request $request): Response
     {
@@ -33,7 +35,7 @@ class AddController extends AbstractController implements MessageBusAwareInterfa
             );
         }
 
-        $this->dispatch(new AddProductToCatalog($name, $price));
+        $this->messageBus->dispatch(new AddProductToCatalog($name, $price));
 
         return new Response('', Response::HTTP_ACCEPTED);
     }
