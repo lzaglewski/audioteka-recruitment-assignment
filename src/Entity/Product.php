@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -19,11 +20,15 @@ class Product
     #[ORM\Column(type: 'integer', nullable: false)]
     private string $priceAmount;
 
-    public function __construct(string $id, string $name, int $price)
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
+    private \DateTimeImmutable $createdAt;
+
+    public function __construct(string $id, string $name, int $price, \DateTimeImmutable $createdAt)
     {
         $this->id = Uuid::fromString($id);
         $this->name = $name;
         $this->priceAmount = $price;
+        $this->createdAt = $createdAt;
     }
 
     public function getId(): string

@@ -12,10 +12,10 @@ class RemoveProductControllerFixture extends AbstractFixture
 
     public function load(ObjectManager $manager): void
     {
-        $product = new Product('d11e1e69-cca7-40a1-8273-9d93c8346efd', 'Product 1', 1990);
+        $product = new Product('d11e1e69-cca7-40a1-8273-9d93c8346efd', 'Product 1', 1990, new \DateTimeImmutable('2020-01-01'));
         $manager->persist($product);
 
-        $product2 = new Product('7bcf6fe9-e831-4776-a9df-76a702233adc', 'Product 2', 2990);
+        $product2 = new Product('7bcf6fe9-e831-4776-a9df-76a702233adc', 'Product 2', 2990, new \DateTimeImmutable('2020-01-01'));
         $manager->persist($product2);
 
         $cart = new Cart('97e385fe-9876-45fc-baa0-4f2f0df90950');
