@@ -2,15 +2,15 @@
 
 namespace App\ResponseBuilder;
 
-use App\Service\Catalog\ProductInterface;
+use App\Entity\Product;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProductListBuilder
 {
-    public function __construct(private UrlGeneratorInterface $urlGenerator) { }
+    public function __construct(private readonly UrlGeneratorInterface $urlGenerator) { }
 
     /**
-     * @param ProductInterface[] $products
+     * @param Product[] $products
      */
     public function __invoke(iterable $products, int $page, int $maxPerPage, int $totalCount): array
     {

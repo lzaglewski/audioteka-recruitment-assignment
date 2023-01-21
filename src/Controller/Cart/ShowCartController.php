@@ -14,7 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ShowCartController extends AbstractController
 {
-    public function __construct(private CartBuilder $cartBuilder) { }
+    public function __construct(private readonly CartBuilder $cartBuilder)
+    {
+    }
 
     public function __invoke(Cart $cart): Response
     {

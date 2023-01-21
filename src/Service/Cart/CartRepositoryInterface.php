@@ -2,11 +2,13 @@
 
 namespace App\Service\Cart;
 
-interface CartService
+use App\Entity\Cart;
+
+interface CartRepositoryInterface
 {
     public function addProduct(string $cartId, string $productId): void;
 
     public function removeProduct(string $cartId, string $productId): void;
 
-    public function create(): CartInterface;
+    public function create(?string $uuid = null): Cart;
 }

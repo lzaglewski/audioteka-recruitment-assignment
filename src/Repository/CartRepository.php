@@ -4,17 +4,16 @@ namespace App\Repository;
 
 use App\Entity\Cart;
 use App\Entity\Product;
-use App\Service\Cart\CartInterface;
-use App\Service\Cart\CartService;
-use App\Service\CartProduct\CartProductService;
+use App\Service\Cart\CartRepositoryInterface;
+use App\Service\CartProduct\CartProductRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
 
-class CartRepository implements CartService
+class CartRepository implements CartRepositoryInterface
 {
-    private CartProductService $cartProductService;
+    private CartProductRepositoryInterface $cartProductService;
 
-    public function __construct(private readonly EntityManagerInterface $entityManager, CartProductService $cartProductService)
+    public function __construct(private readonly EntityManagerInterface $entityManager, CartProductRepositoryInterface $cartProductService)
     {
         $this->cartProductService = $cartProductService;
     }
@@ -54,9 +53,13 @@ class CartRepository implements CartService
         $this->entityManager->flush();
     }
 
-    public function create(): CartInterface
+    public function create(?string $uuid = null): Cart
     {
-        $cart = new Cart(Uuid::uuid4()->toString());
+        if (!$uuid) {
+            $uuid = Uuid::uuid4()->toString();
+        }
+
+        $cart = new Cart($uuid);
 
         $this->entityManager->persist($cart);
         $this->entityManager->flush();

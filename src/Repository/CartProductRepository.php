@@ -4,13 +4,12 @@ namespace App\Repository;
 
 use App\Entity\CartProduct;
 use App\Entity\Product;
-use App\Service\CartProduct\CartProductInterface;
-use App\Service\CartProduct\CartProductService;
+use App\Service\CartProduct\CartProductRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 
-class CartProductRepository implements CartProductService
+class CartProductRepository implements CartProductRepositoryInterface
 {
     private EntityRepository $repository;
 
@@ -22,7 +21,7 @@ class CartProductRepository implements CartProductService
     /**
      * @throws NonUniqueResultException
      */
-    public function getOneByProduct(Product $product): ?CartProductInterface
+    public function getOneByProduct(Product $product): ?CartProduct
     {
         $query = $this->repository->createQueryBuilder('cp')
             ->where('cp.product = :product')

@@ -2,13 +2,11 @@
 
 namespace App\Controller\Cart;
 
-use App\Messenger\CreateCart;
-use App\Service\Cart\CartInterface;
-use App\Service\Cart\CartService;
+use App\Messenger\Cart\CreateCart;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,17 +15,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CreateController extends AbstractController
 {
-    use HandleTrait;
-
-    public function __construct(private readonly CartService $cartService, MessageBusInterface $messageBus) {
-        $this->messageBus = $messageBus;
+    public function __construct(private readonly MessageBusInterface $messageBus)
+    {
     }
 
     public function __invoke(): Response
     {
-        /** @var CartInterface $cart */
-        $cart = $this->handle(new CreateCart());
+        $uuid = Uuid::uuid4()->toString();
+        $this->messageBus->dispatch(new CreateCart($uuid));
 
-        return new JsonResponse(['cart_id' => $cart->getId()], Response::HTTP_CREATED);
+        return new JsonResponse(['cart_id' => $uuid], Response::HTTP_CREATED);
     }
 }

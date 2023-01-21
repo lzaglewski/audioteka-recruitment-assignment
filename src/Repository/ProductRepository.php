@@ -3,14 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Product;
-use App\Service\Catalog\ProductInterface;
-use App\Service\Catalog\ProductProvider;
-use App\Service\Catalog\ProductService;
+use App\Service\Catalog\ProductRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
 
-class ProductRepository implements ProductProvider, ProductService
+class ProductRepository implements ProductRepositoryInterface
 {
     private EntityRepository $repository;
 
@@ -38,7 +36,7 @@ class ProductRepository implements ProductProvider, ProductService
         return $this->repository->find($productId) !== null;
     }
 
-    public function add(string $name, int $price): ProductInterface
+    public function add(string $name, int $price): Product
     {
         $product = new Product(Uuid::uuid4(), $name, $price);
 

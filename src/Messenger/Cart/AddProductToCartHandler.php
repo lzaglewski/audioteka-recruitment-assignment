@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Messenger;
+namespace App\Messenger\Cart;
 
-use App\Service\Cart\CartService;
+use App\Service\Cart\CartRepositoryInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class AddProductToCartHandler implements MessageHandlerInterface
 {
-    public function __construct(private readonly CartService $service) { }
+    public function __construct(private readonly CartRepositoryInterface $service) { }
 
     public function __invoke(AddProductToCart $command): void
     {
