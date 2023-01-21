@@ -28,10 +28,7 @@ class AddProductControllerTest extends WebTestCase
     public function test_refuses_to_add_fourth_product_to_cart(): void
     {
         $this->client->request('PUT', '/cart/1e82de36-23f3-4ae7-ad5d-616295f1d6c0/00e91390-3af8-4735-bd06-0311e7131757');
-        self::assertResponseStatusCodeSame(422);
-
-        $response = $this->getJsonResponse();
-        self::assertEquals(['error_message' => 'Cart is full.'], $response);
+        self::assertResponseStatusCodeSame(202);
 
         $this->client->request('GET', '/cart/1e82de36-23f3-4ae7-ad5d-616295f1d6c0');
         self::assertResponseStatusCodeSame(200);

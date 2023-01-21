@@ -11,6 +11,6 @@ class AddProductToCartHandler implements MessageHandlerInterface
 
     public function __invoke(AddProductToCart $command): void
     {
-        $this->service->addProduct($command->cartId, $command->productId);
+        $this->service->addProductIfNotFull($command->cartId, $command->productId);
     }
 }
