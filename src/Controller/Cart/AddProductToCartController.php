@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/cart/{cart}/{product}", methods={"PUT"}, name="cart-add-product")
  */
-class AddProductController extends AbstractController
+class AddProductToCartController extends AbstractController
 {
     public function __construct(private readonly MessageBusInterface $messageBus)
     {

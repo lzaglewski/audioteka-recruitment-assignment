@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/products", methods={"POST"}, name="product-add")
  */
-class AddController extends AbstractController
+class AddProductController extends AbstractController
 {
     public function __construct(
         private readonly ErrorBuilder        $errorBuilder,

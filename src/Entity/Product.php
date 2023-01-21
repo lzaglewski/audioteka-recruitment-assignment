@@ -45,4 +45,14 @@ class Product
     {
         return $this->priceAmount;
     }
+
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setPrice(int $price): void
+    {
+        $this->priceAmount = $price;
+    }
 }

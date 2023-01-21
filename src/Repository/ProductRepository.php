@@ -6,6 +6,8 @@ use App\Entity\Product;
 use App\Service\Catalog\ProductRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Ramsey\Uuid\Uuid;
 
 class ProductRepository implements ProductRepositoryInterface
@@ -54,5 +56,41 @@ class ProductRepository implements ProductRepositoryInterface
             $this->entityManager->remove($product);
             $this->entityManager->flush();
         }
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function update(string $product, ?string $name, ?int $price)
+    {
+        $product = $this->findProductByUuid($product);
+        if (!$product) {
+            return;
+        }
+
+        if ($name) {
+            $product->setName($name);
+        }
+        if ($price) {
+            $product->setPrice($price);
+        }
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function findProductByUuid(string $uuid): ?Product
+    {
+        $query = $this->repository->createQueryBuilder('p')
+            ->where('p.id = :uuid')
+            ->setParameter('uuid', $uuid)
+            ->setMaxResults(1)
+            ->getQuery();
+
+        return $query->getSingleResult();
     }
 }

@@ -18,4 +18,6 @@ interface ProductRepositoryInterface
     public function exists(string $productId): bool;
 
     public function getTotalCount(): int;
+
+    public function update(string $product, ?string $name, ?int $price);
 }

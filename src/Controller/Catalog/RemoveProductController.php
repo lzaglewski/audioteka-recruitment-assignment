@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/products/{product}", methods={"DELETE"}, name="product-delete")
  */
-class RemoveController extends AbstractController
+class RemoveProductController extends AbstractController
 {
    public function __construct(private readonly MessageBusInterface $messageBus)
    {
