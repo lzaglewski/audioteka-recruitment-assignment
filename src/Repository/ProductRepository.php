@@ -22,6 +22,7 @@ class ProductRepository implements ProductRepositoryInterface
         return $this->repository->createQueryBuilder('p')
             ->setMaxResults($count)
             ->setFirstResult($page * $count)
+            ->orderBy('p.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
     }
@@ -38,7 +39,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function add(string $name, int $price): Product
     {
-        $product = new Product(Uuid::uuid4(), $name, $price);
+        $product = new Product(Uuid::uuid4(), $name, $price, new \DateTimeImmutable());
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();

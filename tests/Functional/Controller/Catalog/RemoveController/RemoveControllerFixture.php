@@ -13,7 +13,7 @@ class RemoveControllerFixture extends AbstractFixture
 
     public function load(ObjectManager $manager): void
     {
-        $product = new Product(self::PRODUCT_ID, 'Product to remove', 1990);
+        $product = new Product(self::PRODUCT_ID, 'Product to remove', 1990, new \DateTimeImmutable('2020-01-01'));
         $manager->persist($product);
         $manager->flush();
     }
