@@ -18,19 +18,29 @@ class CartRepository implements CartRepositoryInterface
         $this->cartProductService = $cartProductService;
     }
 
-    public function addProduct(string $cartId, string $productId): void
+    public function addProductIfNotFull(string $cartId, string $productId): void
     {
-        $cart = $this->entityManager->find(Cart::class, $cartId);
-        $product = $this->entityManager->find(Product::class, $productId);
+        $this->entityManager->beginTransaction();
 
-        if (!$cart || !$product) {
-            return;
+        try {
+            $cart = $this->entityManager->find(Cart::class, $cartId);
+            $product = $this->entityManager->find(Product::class, $productId);
+
+            if (!$cart || !$product) {
+                return;
+            }
+
+            if ($cart->isFull()) {
+                return;
+            }
+
+            $cart->addProduct($product);
+            $this->entityManager->persist($cart);
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (\Throwable $e) {
+            $this->entityManager->rollback();
         }
-
-        $cart->addProduct($product);
-        $this->entityManager->persist($cart);
-        $this->entityManager->flush();
-
     }
 
     public function removeProduct(string $cartId, string $productId): void
